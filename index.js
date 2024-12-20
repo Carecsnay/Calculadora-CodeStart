@@ -1,7 +1,7 @@
 const dqs = (element) => document.querySelector(element);
 const dqsa = (element) => document.querySelectorAll(element);
 
-const numbersButtons = dqsa("[data-number]");
+const numberButtons = dqsa("[data-number]");
 const operationButtons = dqsa("[data-operator]");
 
 const equalsButton = dqs("[data-equals]");
@@ -14,6 +14,11 @@ class Calculator {
     constructor(previousOP, currentOP) {
         this.previousOP = previousOP;
         this.currentOP = currentOP;
+        this.clear();
+    }
+
+    appendNumber(number) {
+        this.currentOperand = `${this.currentOperand}${number.toString()}`;
     }
     clear() {
         this.previousOperand = "";
@@ -33,3 +38,10 @@ allClearButton.addEventListener("click", () => {
     calculator.clear();
     calculator.updateDisplay();
 });
+
+for (const numberButton of numberButtons) {
+    numberButton.addEventListener("click", () => {
+        calculator.appendNumber(numberButton.innerText);
+        calculator.updateDisplay();
+    });
+}
