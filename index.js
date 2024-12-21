@@ -83,9 +83,10 @@ class Calculator {
     }
 
     appendNumber(number) {
-        if (this.currentOperand.includes(".") && number === ".") return; //não digitar mais de um ponto
+        if (this.currentOperand.toString().includes(".") && number === ".") return; //não digitar mais de um ponto
         this.currentOperand = `${this.currentOperand}${number.toString()}`;
     }
+
     clear() {
         this.previousOperand = "";
         this.currentOperand = "";
@@ -157,6 +158,7 @@ window.addEventListener("keydown", (e) => {
 
     switch (e.key) {
         case "Enter":
+        case "=":
             addActiveEffect(equalsButton);
             equalsButton.dispatchEvent(new Event("click"));
             break;
