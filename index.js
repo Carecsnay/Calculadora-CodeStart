@@ -17,6 +17,26 @@ class Calculator {
         this.clear();
     }
 
+    formatDisplayNumber(number) {
+        const stringNumber = number.toString();
+
+        const integer = parseFloat(stringNumber.split(".")[0]);
+        const decimal = stringNumber.split(".")[1];
+
+        let integerDisplay;
+
+        if (isNaN(integer)) {
+            integerDisplay = "";
+        } else {
+            integerDisplay = integer.toLocaleString("en", { maximumFractionDigits: 0 });
+        }
+        if (decimal != null) {
+            return `${integerDisplay}.${decimal}`;
+        } else {
+            return integerDisplay;
+        }
+    }
+
     delete() {
         this.currentOperand = this.currentOperand.toString().slice(0, -1);
     }
@@ -73,8 +93,8 @@ class Calculator {
     }
 
     updateDisplay() {
-        this.previousOP.innerText = `${this.previousOperand} ${this.operation || ""} `;
-        this.currentOP.innerText = this.currentOperand;
+        this.previousOP.innerText = `${this.formatDisplayNumber(this.previousOperand)} ${this.operation || ""} `;
+        this.currentOP.innerText = this.formatDisplayNumber(this.currentOperand);
     }
 }
 
@@ -108,3 +128,46 @@ for (const operationButton of operationButtons) {
         calculator.updateDisplay();
     });
 }
+
+const addActiveEffect = (button) => {
+    button.classList.add("button-active");
+    setTimeout(() => button.classList.remove("button-active"), 150);
+};
+
+window.addEventListener("keydown", (e) => {
+    console.log(`Pressionou a tecla: ${e.key}`);
+    for (const numberButton of numberButtons) {
+        if (e.key === numberButton.innerText) {
+            calculator.appendNumber(numberButton.innerText);
+            calculator.updateDisplay();
+            addActiveEffect(numberButton);
+            return;
+        }
+    }
+
+    for (const operationButton of operationButtons) {
+        const operation = e.key === "/" ? "÷" : e.key;
+        if (operation === operationButton.innerText) {
+            calculator.chooseOperation(operationButton.innerText);
+            calculator.updateDisplay();
+            addActiveEffect(operationButton);
+            return;
+        }
+    }
+
+    switch (e.key) {
+        case "Enter":
+            addActiveEffect(equalsButton);
+            equalsButton.dispatchEvent(new Event("click"));
+            break;
+        case "Backspace":
+            addActiveEffect(deleteButton);
+            deleteButton.dispatchEvent(new Event("click"));
+            break;
+        case "Escape":
+        case "Delete":
+            addActiveEffect(allClearButton);
+            allClearButton.dispatchEvent(new Event("click"));
+            break;
+    }
+});

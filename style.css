@@ -73,3 +73,8 @@ body {
     color: #fff;
     font-size: 2.5rem;
 }
+
+.grid-container .button-active {
+    background-color: #990000ee;
+    transition: background-color 0.2s;
+}
